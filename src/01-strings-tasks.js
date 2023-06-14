@@ -201,13 +201,13 @@ function extractEmails(str) {
 function getRectangleString(width, height) {
   let rectangleString = '';
 
-  rectangleString += '┌' + '─'.repeat(width - 2) + '┐\n';
+  rectangleString += `┌${'─'.repeat(width - 2)}┐\n`;
 
-  for (let i = 0; i < height - 2; i++) {
-    rectangleString += '│' + ' '.repeat(width - 2) + '│\n';
+  for (let i = 0; i < height - 2; i += 1) {
+    rectangleString += `│${' '.repeat(width - 2)}│\n`;
   }
 
-  rectangleString += '└' + '─'.repeat(width - 2) + '┘\n';
+  rectangleString += `└${'─'.repeat(width - 2)}┘\n`;
 
   return rectangleString;
 }
@@ -229,9 +229,9 @@ function getRectangleString(width, height) {
  *
  */
 function encodeToRot13(str) {
-  return str.replace(/[a-zA-Z]/g, function (char) {
-    let code = char.charCodeAt(0);
-    let base = code <= 90 ? 65 : 97;
+  return str.replace(/[a-zA-Z]/g, (char) => {
+    const code = char.charCodeAt(0);
+    const base = code <= 90 ? 65 : 97;
     return String.fromCharCode(((code - base + 13) % 26) + base);
   });
 }
@@ -250,9 +250,7 @@ function encodeToRot13(str) {
  *   isString(new String('test')) => true
  */
 function isString(value) {
-  return Object.prototype.toString.call(value) === '[object String]'
-    ? true
-    : false;
+  return Object.prototype.toString.call(value) === '[object String]';
 }
 
 /**
