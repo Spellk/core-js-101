@@ -74,8 +74,8 @@ function getAverage(value1, value2) {
  *   (-5,0) (10,-10) => 18.027756377319946
  */
 function getDistanceBetweenPoints(x1, y1, x2, y2) {
-  let a = x1 - x2;
-  let b = y1 - y2;
+  const a = x1 - x2;
+  const b = y1 - y2;
   return Math.hypot(a, b);
 }
 
@@ -187,7 +187,7 @@ function getParallelepipedDiagonal(a, b, c) {
  *   1678, 3  => 2000
  */
 function roundToPowerOfTen(num, pow) {
-  const multiplier = Math.pow(10, pow);
+  const multiplier = 10 ** pow;
   return Math.round(num / multiplier) * multiplier;
 }
 
@@ -213,7 +213,7 @@ function isPrime(n) {
     return false;
   }
 
-  for (let i = 2; i < n; i++) {
+  for (let i = 2; i < n; i += 1) {
     if (n % i === 0) {
       return false;
     }
@@ -239,7 +239,7 @@ function isPrime(n) {
  */
 function toNumber(value, def) {
   const num = Number(value);
-  return isNaN(num) ? def : num;
+  return Number.isNaN(num) ? def : num;
 }
 
 module.exports = {
