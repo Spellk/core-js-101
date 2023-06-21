@@ -52,8 +52,9 @@ async function willYouMarryMe(isPositiveAnswer) {
  *    })
  *
  */
-function processAllPromises(/* array */) {
-  throw new Error('Not implemented');
+function processAllPromises(array) {
+  const promises = array.map((item) => Promise.resolve(item));
+  return Promise.all(promises);
 }
 
 /**
