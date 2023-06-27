@@ -140,16 +140,12 @@ function isTriangle(a, b, c) {
  *
  */
 function doRectanglesOverlap(rect1, rect2) {
-  if (
-    rect1.left + rect1.width < rect2.left ||
-    rect2.left + rect2.width < rect1.left ||
-    rect1.top + rect1.height < rect2.top ||
-    rect2.top + rect2.height < rect1.top
-  ) {
-    return false;
-  }
-  return true;
+  return !(rect1.left > rect2.left + rect2.width
+      || rect1.left + rect1.width < rect2.left
+      || rect1.top > rect2.top + rect2.height
+      || rect1.top + rect1.height < rect2.top);
 }
+
 
 /**
  * Returns true, if point lies inside the circle, otherwise false.
@@ -193,22 +189,26 @@ function isInsideCircle(/* circle, point */) {
  *   'entente' => null
  */
 function findFirstSingleChar(str) {
-  let count = {};
+  const count = {};
 
-  for (let char of str) {
+  [...str].forEach((char) => {
     if (count[char]) {
-      count[char]++;
+      count[char] += 1;
     } else {
       count[char] = 1;
     }
-  }
+  });
 
-  for (let char of str) {
+  let singleChar = null;
+  [...str].some((char) => {
     if (count[char] === 1) {
-      return char;
+      singleChar = char;
+      return true;
     }
-  }
-  return null;
+    return false;
+  });
+
+  return singleChar;
 }
 
 /**
@@ -234,17 +234,20 @@ function findFirstSingleChar(str) {
  *
  */
 function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  let lowerLimit = a;
+  let upperLimit = b;
+
   if (a > b) {
-    let temp = a;
-    a = b;
-    b = temp;
+    lowerLimit = b;
+    upperLimit = a;
   }
 
-  let start = isStartIncluded ? '[' : '(';
-  let end = isEndIncluded ? ']' : ')';
+  const start = isStartIncluded ? '[' : '(';
+  const end = isEndIncluded ? ']' : ')';
 
-  return start + a + ', ' + b + end;
+  return `${start + lowerLimit}, ${upperLimit}${end}`;
 }
+
 
 /**
  * Reverse the specified string (put all chars in reverse order)
@@ -275,8 +278,9 @@ function reverseString(str) {
  *   34143 => 34143
  */
 function reverseInteger(num) {
-  return parseInt(num.toString().split('').reverse().join(''));
+  return parseInt(num.toString().split('').reverse().join(''), 10);
 }
+
 
 /**
  * Validates the CCN (credit card number) and return true if CCN is valid
@@ -299,13 +303,13 @@ function reverseInteger(num) {
  *   4916123456789012 => false
  */
 function isCreditCardNumber(ccn) {
-  let ccnString = ccn.toString();
-  let length = ccnString.length;
-  let parity = length % 2;
+  const ccnString = ccn.toString();
+  const { length } = ccnString;
+  const parity = length % 2;
   let sum = 0;
 
-  for (let i = 0; i < length; i++) {
-    let digit = parseInt(ccnString[i]);
+  for (let i = 0; i < length; i += 1) {
+    let digit = parseInt(ccnString[i], 10);
     if (i % 2 === parity) digit *= 2;
     if (digit > 9) digit -= 9;
     sum += digit;
@@ -313,6 +317,7 @@ function isCreditCardNumber(ccn) {
 
   return sum % 10 === 0;
 }
+
 
 /**
  * Returns the digital root of integer:
@@ -329,11 +334,13 @@ function isCreditCardNumber(ccn) {
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
 function getDigitalRoot(num) {
-  while (num > 9) {
-    num = Array.from(String(num), Number).reduce((acc, cur) => acc + cur, 0);
+  let number = num;
+  while (number > 9) {
+    number = Array.from(String(number), Number).reduce((acc, cur) => acc + cur, 0);
   }
-  return num;
+  return number;
 }
+
 
 /**
  * Returns true if the specified string has the balanced brackets and false otherwise.
@@ -357,26 +364,28 @@ function getDigitalRoot(num) {
  *   '{[(<{[]}>)]}' = true
  */
 function isBracketsBalanced(str) {
-  let stack = [];
-  let bracketsMap = {
+  const stack = [];
+  const bracketsMap = {
     '(': ')',
     '[': ']',
     '{': '}',
     '<': '>',
   };
-  let closingBrackets = Object.values(bracketsMap);
+  const closingBrackets = Object.values(bracketsMap);
 
-  for (let char of str) {
+  const isValid = str.split('').every((char) => {
     if (bracketsMap[char]) {
       stack.push(char);
     } else if (closingBrackets.includes(char)) {
-      let top = stack.pop();
+      const top = stack.pop();
       if (bracketsMap[top] !== char) {
         return false;
       }
     }
-  }
-  return stack.length === 0;
+    return true;
+  });
+
+  return isValid && stack.length === 0;
 }
 
 /**
