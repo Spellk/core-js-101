@@ -424,8 +424,18 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const splitPaths = pathes.map((path) => path.split('/'));
+
+  const commonPath = splitPaths.reduce((acc, currentPath) => (
+    acc.filter((dir, index) => dir === currentPath[index])
+  ));
+
+  if (commonPath.length === 0) {
+    return '';
+  }
+
+  return `${commonPath.join('/')}/`;
 }
 
 /**
@@ -446,8 +456,18 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = Array(m1.length).fill().map(() => Array(m2[0].length).fill(0));
+
+  for (let i = 0; i < m1.length; i += 1) {
+    for (let j = 0; j < m2[0].length; j += 1) {
+      for (let k = 0; k < m1[0].length; k += 1) {
+        result[i][j] += m1[i][k] * m2[k][j];
+      }
+    }
+  }
+
+  return result;
 }
 
 /**
@@ -480,8 +500,30 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const winningCombinations = [
+    [[0, 0], [0, 1], [0, 2]],
+    [[1, 0], [1, 1], [1, 2]],
+    [[2, 0], [2, 1], [2, 2]],
+    [[0, 0], [1, 0], [2, 0]],
+    [[0, 1], [1, 1], [2, 1]],
+    [[0, 2], [1, 2], [2, 2]],
+    [[0, 0], [1, 1], [2, 2]],
+    [[0, 2], [1, 1], [2, 0]],
+  ];
+
+  for (let i = 0; i < winningCombinations.length; i += 1) {
+    const [[x1, y1], [x2, y2], [x3, y3]] = winningCombinations[i];
+    if (
+      position[x1][y1]
+      && position[x1][y1] === position[x2][y2]
+      && position[x1][y1] === position[x3][y3]
+    ) {
+      return position[x1][y1];
+    }
+  }
+
+  return undefined;
 }
 
 module.exports = {
